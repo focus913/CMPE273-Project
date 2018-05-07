@@ -10,7 +10,7 @@ from flask import Flask, jsonify, request
 
 class Blockchain:
     def __init__(self):
-        self.current_transactions = []
+        self.current_registrations = []
         self.chain = []
         self.nodes = set()
 
@@ -103,29 +103,31 @@ class Blockchain:
         block = {
             'index': len(self.chain) + 1,
             'timestamp': time(),
-            'transactions': self.current_transactions,
+            'registrations': self.current_registrations,
             'proof': proof,
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
         }
 
-        # Reset the current list of transactions
-        self.current_transactions = []
+        # Reset the current list of registrations
+        self.current_registrations = []
 
         self.chain.append(block)
         return block
 
-    def new_transaction(self, sender, recipient, amount):
+    def new_registration(self, name, brand, price, details):
         """
-        Creates a new transaction to go into the next mined Block
-        :param sender: Address of the Sender
-        :param recipient: Address of the Recipient
-        :param amount: Amount
-        :return: The index of the Block that will hold this transaction
+        Creates a new registration to go into the next mined Block
+        :param name: <str> Name of the product
+        :param brand: <str> Brand of the product
+        :param price: <double> Price
+        :param details: <str> The detailed description about the product
+        :return: The index of the Block that will hold this registration
         """
-        self.current_transactions.append({
-            'sender': sender,
-            'recipient': recipient,
-            'amount': amount,
+        self.current_registrations.append({
+            'name': name,
+            'brand': brand,
+            'price': price,
+            'details': details,
         })
 
         return self.last_block['index'] + 1
@@ -140,7 +142,7 @@ class Blockchain:
         Creates a SHA-256 hash of a Block
         :param block: Block
         """
-
+        
         # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
@@ -178,6 +180,7 @@ class Blockchain:
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == "0000"
 
+
 # Instantiate the Node
 app = Flask(__name__)
 
@@ -194,13 +197,14 @@ def mine():
     last_block = blockchain.last_block
     proof = blockchain.proof_of_work(last_block)
 
+    # Baby food registration does not include rewards for mining at this stage
     # We must receive a reward for finding the proof.
     # The sender is "0" to signify that this node has mined a new coin.
-    blockchain.new_transaction(
-        sender="0",
-        recipient=node_identifier,
-        amount=1,
-    )
+    # blockchain.new_registration(
+    #     sender="0",
+    #     recipient=node_identifier,
+    #     amount=1,
+    # )
 
     # Forge the new Block by adding it to the chain
     previous_hash = blockchain.hash(last_block)
@@ -209,26 +213,27 @@ def mine():
     response = {
         'message': "New Block Forged",
         'index': block['index'],
-        'transactions': block['transactions'],
+        'registrations': block['registrations'],
         'proof': block['proof'],
         'previous_hash': block['previous_hash'],
     }
     return jsonify(response), 200
 
 
-@app.route('/transactions/new', methods=['POST'])
-def new_transaction():
+@app.route('/registrations/new', methods=['POST'])
+def new_registration():
     values = request.get_json()
 
     # Check that the required fields are in the POST'ed data
-    required = ['sender', 'recipient', 'amount']
+    required = ['name', 'brand', 'price','details']
     if not all(k in values for k in required):
         return 'Missing values', 400
 
-    # Create a new Transaction
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+    # Create a new registration
+    index = blockchain.new_registration(
+        values['name'], values['brand'], values['price'],values['details'])
 
-    response = {'message': f'Transaction will be added to Block {index}'}
+    response = {'message': f'Registration will be added to Block {index}'}
     return jsonify(response), 201
 
 
@@ -281,7 +286,8 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
-    parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
+    parser.add_argument('-p', '--port', default=5000,
+                        type=int, help='port to listen on')
     args = parser.parse_args()
     port = args.port
 

@@ -13,11 +13,12 @@ class BlockchainTestCase(TestCase):
     def create_block(self, proof=123, previous_hash='abc'):
         self.blockchain.new_block(proof, previous_hash)
 
-    def create_transaction(self, sender='a', recipient='b', amount=1):
-        self.blockchain.new_transaction(
-            sender=sender,
-            recipient=recipient,
-            amount=amount
+    def create_registration(self, name='a', brand='b', price=1, details='c'):
+        self.blockchain.new_registration(
+            name=name,
+            brand=brand,
+            price=price,
+            details=details
         )
 
 
@@ -46,7 +47,7 @@ class TestRegisterNodes(BlockchainTestCase):
         assert len(blockchain.nodes) == 1
 
 
-class TestBlocksAndTransactions(BlockchainTestCase):
+class TestBlocksAndRegistrations(BlockchainTestCase):
 
     def test_block_creation(self):
         self.create_block()
@@ -60,24 +61,25 @@ class TestBlocksAndTransactions(BlockchainTestCase):
         assert latest_block['proof'] == 123
         assert latest_block['previous_hash'] == 'abc'
 
-    def test_create_transaction(self):
-        self.create_transaction()
+    def test_create_registration(self):
+        self.create_registration()
 
-        transaction = self.blockchain.current_transactions[-1]
+        registration = self.blockchain.current_registrations[-1]
 
-        assert transaction
-        assert transaction['sender'] == 'a'
-        assert transaction['recipient'] == 'b'
-        assert transaction['amount'] == 1
+        assert registration
+        assert registration['name'] == 'a'
+        assert registration['brand'] == 'b'
+        assert registration['price'] == 1
+        assert registration['details'] == 'd'
 
-    def test_block_resets_transactions(self):
-        self.create_transaction()
+    def test_block_resets_registrations(self):
+        self.create_registration()
 
-        initial_length = len(self.blockchain.current_transactions)
+        initial_length = len(self.blockchain.current_registrations)
 
         self.create_block()
 
-        current_length = len(self.blockchain.current_transactions)
+        current_length = len(self.blockchain.current_registrations)
 
         assert initial_length == 1
         assert current_length == 0
@@ -97,7 +99,8 @@ class TestHashingAndProofs(BlockchainTestCase):
         self.create_block()
 
         new_block = self.blockchain.last_block
-        new_block_json = json.dumps(self.blockchain.last_block, sort_keys=True).encode()
+        new_block_json = json.dumps(
+            self.blockchain.last_block, sort_keys=True).encode()
         new_hash = hashlib.sha256(new_block_json).hexdigest()
 
         assert len(new_hash) == 64
