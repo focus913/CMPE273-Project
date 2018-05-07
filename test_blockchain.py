@@ -70,7 +70,7 @@ class TestBlocksAndRegistrations(BlockchainTestCase):
         assert registration['name'] == 'a'
         assert registration['brand'] == 'b'
         assert registration['price'] == 1
-        assert registration['details'] == 'd'
+        assert registration['details'] == 'c'
 
     def test_block_resets_registrations(self):
         self.create_registration()
