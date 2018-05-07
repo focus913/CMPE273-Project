@@ -90,7 +90,6 @@ class Blockchain:
         if new_chain:
             self.chain = new_chain
             return True
-
         return False
 
     def new_block(self, proof, previous_hash):
