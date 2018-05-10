@@ -103,7 +103,7 @@ class Blockchain:
         block = {
             'index': len(self.chain) + 1,
             'timestamp': time(),
-            'registrations': self.current_registrations,
+            'products': self.current_registrations,
             'proof': proof,
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
         }
