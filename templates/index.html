@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>watermelon</title>
+	<link href="../static/css/bootstrap2.css" rel="stylesheet">
+	<link href="../static/css/bootstrap.css" rel="stylesheet">
+	<link href="../static/css/style.css" rel="stylesheet">
+</head>
+<body>
+	<div class="main">
+		<div class="container">
+			<div id="inputbox" class="center">
+				<form action="/chain" method="get">
+					<div class="form-group">
+						<input class="btn btn-primary" type="submit" value="Get the Baby Foods Blockchain" name="Submit"/>
+					</div>
+				</form>
+				<form action="/mine" method="get">
+					<div class="form-group">
+						<input class="btn btn-primary" type="submit" value="Mine a New Block" name="Submit"/>
+					</div>
+				</form>
+				<form action="/products/new" method="post">
+					<div class="form-group">
+						<label>Prodct Name:</label>
+						<input class="form-control" type="text" name="name">
+						<label>Type: </label>
+						<select class="form-control" name="type">
+							<option>Baby Formula</option>
+							<option>Meals</option>
+							<option>Snack Foods</option>
+							<option>Cereal</option>
+							<option>Beverages</option>
+						</select>
+						<label>Manufacturer: </label>
+						<input class="form-control" type="text" name="manu">
+						<label>Description:</label>
+						<textarea class="form-control" name="description"></textarea>
+					</div>
+						<input class="btn btn-primary" type="submit" name="submit" value="Register a Baby Food">
+					
+				</form>
+			</div>
+			<div id="msgbox" class="center alert alert-primary" role="alert">
+				{% with messages = get_flashed_messages() %}
+					{% if messages %}
+						{% for message in messages %}
+								<p>{{message}}</p>
+						{% endfor %}
+					{% endif %}
+				{% endwith %}
+				{{res}}
+			</div>
+		</div>
+	</div>
+</body>
+</html>
