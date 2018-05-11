@@ -13,12 +13,12 @@ class BlockchainTestCase(TestCase):
     def create_block(self, proof=123, previous_hash='abc'):
         self.blockchain.new_block(proof, previous_hash)
 
-    def create_registration(self, name='a', brand='b', price=1, details='c'):
+    def create_registration(self, Name='a', Type='b', Price=1, Details='c'):
         self.blockchain.new_registration(
-            name=name,
-            brand=brand,
-            price=price,
-            details=details
+            Name=Name,
+            Type=Type,
+            Price=Price,
+            Details=Details
         )
 
 
@@ -67,10 +67,10 @@ class TestBlocksAndRegistrations(BlockchainTestCase):
         registration = self.blockchain.current_registrations[-1]
 
         assert registration
-        assert registration['name'] == 'a'
-        assert registration['brand'] == 'b'
-        assert registration['price'] == 1
-        assert registration['details'] == 'c'
+        assert registration['Name'] == 'a'
+        assert registration['Type'] == 'b'
+        assert registration['Price'] == 1
+        assert registration['Details'] == 'c'
 
     def test_block_resets_registrations(self):
         self.create_registration()
