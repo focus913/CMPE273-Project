@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>23333 Presents</title>
+	<link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" 
+	integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+	<!--
+	<link href="../static/css/bootstrap2.css" rel="stylesheet">
+	<link href="../static/css/bootstrap.css" rel="stylesheet">
+	<link href="../static/css/style.css" rel="stylesheet">
+	-->
+</head>
+<body>
+	<div class="main">
+		<div class="container">
+			<div class="row">
+				<h1>Baby Product</h1>
+			</div>
+			<div id="inputbox" class="row center">
+				<div class="col-6">
+				<form action="/registrations/new" method="post">
+					<div class="form-group">
+						<label>Prodct Name:</label>
+						<input class="form-control" type="text" name="name" required />
+						<label>Type: </label>
+						<select class="form-control" name="type">
+							<option>Formula</option>
+							<option>Puffs</option>
+							<option>Milk</option>
+							<option>Yogort</option>
+							<option>Meal</option>
+						</select>
+						<label>Price: </label>
+						<input class="form-control" type="text" name="price" required />
+						<label>Details:</label>
+						<textarea class="form-control" name="details"></textarea>
+					
+						<input class="btn btn-primary" type="submit" name="submit" value="Register new Product">
+						</div>
+					</form>
+				
+				
+				<form action="/nodes/resolve" method="get">
+					<div class="form-group">
+						<input class="btn btn-primary" type="submit" value="Get the Newest Chain" name="Submit"/>
+					</div>
+				</form>
+				<form action="/mine" method="get">
+					<div class="form-group">
+						<input class="btn btn-primary" type="submit" value="Add Product to New Block" name="Submit"/>
+					</div>
+				</form>
+				<form action="/chain" method="get">
+					<div class="form-group">
+						<input class="btn btn-primary" type="submit" value="Get my Chain" name="Submit"/>
+					</div>
+				</form>
+			</div>
+			</div>
+
+
+			<div id="msgbox" class="row center alert alert-primary" role="alert">
+				{% with messages = get_flashed_messages() %}
+					{% if messages %}
+						{% for message in messages %}
+								<p>{{message}}</p>
+						{% endfor %}
+					{% endif %}
+				{% endwith %}
+				{% if new_registered %}
+					<p>Prodct Name: {{new_registered['product_name']}} <br /></p>
+					<p>Type: {{new_registered['product_type']}}  <br></p>
+					<p>Price: {{new_registered['product_price']}}  <br></p>
+					<p>Details: {{new_registered['product_details']}}  <br></p>
+				{% endif %}
+				{% if new_block %}
+					<p>Index: {{new_block['index']}}  <br></p>
+					<p>Foods: {{new_block['products']}}  <br></p>
+					<p>Proof: {{new_block['proof']}}  <br></p>
+					<p>Previous Hash: {{new_block['previous_hash']}}  <br></p>
+				{% endif %}
+				{{res}}
+				{% if chain %}
+					<p>Chain Length: {{chain['length']}}  <br></p>
+					{% for block in chain['chain'] %}
+						<p>Index:{{block['index']}}  <br></p>
+						<p>Foods: {{block['products']}}  <br></p>
+					{% endfor %}
+				{% endif %}
+				{{res}}
+			</div>
+		</div>
+	</div>
+</body>
+</html>

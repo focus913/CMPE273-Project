@@ -103,7 +103,7 @@ class Blockchain:
         block = {
             'index': len(self.chain) + 1,
             'timestamp': time(),
-            'registrations': self.current_registrations,
+            'products': self.current_registrations,
             'proof': proof,
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
         }
@@ -114,20 +114,20 @@ class Blockchain:
         self.chain.append(block)
         return block
 
-    def new_registration(self, name, brand, price, details):
+    def new_registration(self, Name, Type, Price, Details):
         """
         Creates a new registration to go into the next mined Block
         :param name: <str> Name of the product
-        :param brand: <str> Brand of the product
+        :param type: <str> type of the product
         :param price: <double> Price
         :param details: <str> The detailed description about the product
         :return: The index of the Block that will hold this registration
         """
         self.current_registrations.append({
-            'name': name,
-            'brand': brand,
-            'price': price,
-            'details': details,
+            'Name': Name,
+            'Type': Type,
+            'Price': Price,
+            'Details': Details,
         })
 
         return self.last_block['index'] + 1
